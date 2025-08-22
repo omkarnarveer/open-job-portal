@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import client from '../api/client';
 import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import JobCard from '../components/JobCard';
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
