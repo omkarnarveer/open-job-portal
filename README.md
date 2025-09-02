@@ -1,3 +1,131 @@
+#Open-Source Job Portal
+An open-source job portal designed to connect job seekers with relevant job listings. This project is a full-stack web application built to provide a platform for employers to post job openings and for job seekers to find and apply for jobs efficiently.
+
+Features
+User Authentication: Secure registration and login for both job seekers and employers.
+
+Job Listing Management: Employers can create, edit, delete, and manage their job postings from a dedicated dashboard.
+
+Advanced Job Search: Job seekers can search and filter job listings by keywords, location, job type, and more.
+
+Application Tracking: Job seekers have a personal dashboard to view and manage the status of their job applications.
+
+Detailed User Profiles: Dedicated profiles for job seekers and employers to showcase their skills, work history, and company information.
+
+Responsive Design: The application is built to be accessible and user-friendly on all devices, from desktops to mobile phones.
+
+Technologies Used
+Frontend
+React: A JavaScript library for building dynamic user interfaces.
+
+Tailwind CSS: A utility-first CSS framework for rapid and responsive UI development.
+
+Backend
+Django: A high-level Python web framework that encourages rapid development and clean, pragmatic design.
+
+Django REST Framework: A powerful toolkit for building Web APIs.
+
+MySQL: An open-source relational database management system for storing application data.
+
+Getting Started
+Follow these instructions to set up and run the project locally.
+
+Prerequisites
+Python 3.8+
+
+Node.js and npm
+
+MySQL Server
+
+Backend Setup (Django & MySQL)
+Clone the repository:
+
+git clone [https://github.com/omkarnarveer/open-job-portal.git](https://github.com/omkarnarveer/open-job-portal.git)
+cd open-job-portal/backend
+
+Create and activate a virtual environment:
+
+python -m venv venv
+# On Windows
+venv\Scripts\activate
+# On macOS/Linux
+source venv/bin/activate
+
+Install backend dependencies:
+
+pip install -r requirements.txt
+
+Configure your MySQL database:
+
+Create a new MySQL database for the project.
+
+Update the DATABASES settings in settings.py with your MySQL credentials.
+
+Run migrations and create a superuser:
+
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+
+Start the backend server:
+
+python manage.py runserver
+
+The backend API will be running at http://127.0.0.1:8000.
+
+Frontend Setup (React & Tailwind CSS)
+Navigate to the frontend directory:
+
+cd ../frontend
+
+Install frontend dependencies:
+
+npm install
+
+Start the frontend development server:
+
+npm start
+
+The frontend application will be available at http://localhost:3000.
+
+Project Structure
+open-job-portal/
+├── backend/
+│   ├── job_portal/
+│   ├── job_api/
+│   ├── manage.py
+│   └── requirements.txt
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   ├── pages/
+    │   ├── App.js
+    │   ├── index.js
+    │   └── ...
+    ├── public/
+    └── package.json
+
+Contributing
+We welcome contributions! Please feel free to open an issue or submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+
+Fork the repository.
+
+Create a new branch (git checkout -b feature/your-feature-name).
+
+Commit your changes (git commit -m 'Add new feature').
+
+Push to the branch (git push origin feature/your-feature-name).
+
+Create a Pull Request.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Contact
+For any questions or suggestions, please visit the project's GitHub repository:
+
+https://github.com/omkarnarveer/open-job-portal
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,4 +196,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# open-job-portal
+ open-job-portal
