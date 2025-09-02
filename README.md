@@ -1,7 +1,9 @@
-#Open-Source Job Portal
+# Open-Source Job Portal
+
 An open-source job portal designed to connect job seekers with relevant job listings. This project is a full-stack web application built to provide a platform for employers to post job openings and for job seekers to find and apply for jobs efficiently.
 
-Features
+# Features
+
 User Authentication: Secure registration and login for both job seekers and employers.
 
 Job Listing Management: Employers can create, edit, delete, and manage their job postings from a dedicated dashboard.
@@ -14,23 +16,28 @@ Detailed User Profiles: Dedicated profiles for job seekers and employers to show
 
 Responsive Design: The application is built to be accessible and user-friendly on all devices, from desktops to mobile phones.
 
-Technologies Used
-Frontend
+# Technologies Used
+
+# Frontend
+
 React: A JavaScript library for building dynamic user interfaces.
 
 Tailwind CSS: A utility-first CSS framework for rapid and responsive UI development.
 
-Backend
+# Backend
+
 Django: A high-level Python web framework that encourages rapid development and clean, pragmatic design.
 
 Django REST Framework: A powerful toolkit for building Web APIs.
 
 MySQL: An open-source relational database management system for storing application data.
 
-Getting Started
+# Getting Started
+
 Follow these instructions to set up and run the project locally.
 
-Prerequisites
+# Prerequisites
+
 Python 3.8+
 
 Node.js and npm
@@ -38,24 +45,30 @@ Node.js and npm
 MySQL Server
 
 Backend Setup (Django & MySQL)
-Clone the repository:
+
+# Clone the repository:
 
 git clone [https://github.com/omkarnarveer/open-job-portal.git](https://github.com/omkarnarveer/open-job-portal.git)
+
 cd open-job-portal/backend
 
 Create and activate a virtual environment:
 
 python -m venv venv
+
 # On Windows
+
 venv\Scripts\activate
+
 # On macOS/Linux
+
 source venv/bin/activate
 
-Install backend dependencies:
+# Install backend dependencies:
 
 pip install -r requirements.txt
 
-Configure your MySQL database:
+# Configure your MySQL database:
 
 Create a new MySQL database for the project.
 
@@ -105,10 +118,10 @@ open-job-portal/
     ├── public/
     └── package.json
 
-Contributing
+# Contributing
 We welcome contributions! Please feel free to open an issue or submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
 
-Fork the repository.
+# Fork the repository.
 
 Create a new branch (git checkout -b feature/your-feature-name).
 
@@ -116,12 +129,13 @@ Commit your changes (git commit -m 'Add new feature').
 
 Push to the branch (git push origin feature/your-feature-name).
 
-Create a Pull Request.
+# Create a Pull Request.
 
-License
+# License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Contact
+# Contact
+
 For any questions or suggestions, please visit the project's GitHub repository:
 
 https://github.com/omkarnarveer/open-job-portal
@@ -137,6 +151,7 @@ In the project directory, you can run:
 ### `npm start`
 
 Runs the app in the development mode.\
+
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
