@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import client from '../api/client';
 import { useAuth } from '../auth/AuthContext';
-import { FaEnvelope } from 'react-icons/fa';
+import { FaEnvelope, FaPaperclip } from 'react-icons/fa';
 
 export default function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [coverLetter, setCoverLetter] = useState('');
+  const [resume, setResume] = useState(null);
   const [message, setMessage] = useState(null);
   const { user } = useAuth();
 
@@ -28,8 +29,14 @@ export default function JobDetail() {
     const formData = new FormData();
     formData.append('job', id);
     formData.append('cover_letter', coverLetter);
+    if (resume) {
+      formData.append('resume', resume);
+    }
+
     try {
-      await client.post('/api/applications/', formData, { headers: { 'Content-Type': 'multipart/form-data' }});
+      await client.post('/api/applications/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       setMessage('Application submitted!');
     } catch (error) {
       console.error("Failed to submit application:", error);
@@ -67,6 +74,18 @@ export default function JobDetail() {
                 className="block w-full px-5 py-3 border-2 border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-4 focus:ring-accent-teal transition-all duration-300 sm:text-sm placeholder-gray-400"
                 value={coverLetter}
                 onChange={e => setCoverLetter(e.target.value)}
+              />
+            </div>
+            <div className="mb-6">
+              <label htmlFor="resume" className="block text-sm font-semibold text-gray-700 mb-2">
+                Upload Resume (PDF)
+              </label>
+              <input
+                id="resume"
+                type="file"
+                accept="application/pdf"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary-blue hover:file:bg-blue-100"
+                onChange={e => setResume(e.target.files[0])}
               />
             </div>
             <button

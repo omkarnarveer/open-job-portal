@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import client from '../api/client';
-import { FaTrash, FaCheck, FaUsers, FaChevronLeft } from 'react-icons/fa';
+import { FaTrash, FaCheck, FaUsers, FaChevronLeft, FaFilePdf } from 'react-icons/fa';
 
 export default function DashboardEmployer() {
   const [jobs, setJobs] = useState([]);
@@ -97,6 +97,7 @@ export default function DashboardEmployer() {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Applicant</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cover Letter</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Resume</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -106,6 +107,14 @@ export default function DashboardEmployer() {
                 <tr key={app.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.seeker_username}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{app.cover_letter.slice(0, 50)}...</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {app.resume && (
+                      <a href={app.resume} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-primary-blue hover:text-accent-teal">
+                        <FaFilePdf />
+                        <span>View Resume</span>
+                      </a>
+                    )}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${app.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' : app.status === 'REJECTED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
                       {app.status}

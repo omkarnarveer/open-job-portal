@@ -4,9 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Application
 from .serializers import ApplicationSerializer
-# Correct import path for IsEmployer
 from accounts.permissions import IsEmployer
-# Correct import path for IsJobSeeker
 from .permissions import IsJobSeeker
 
 class ApplicationViewSet(viewsets.ModelViewSet):

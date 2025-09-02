@@ -11,6 +11,8 @@ class JobViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
+        # If the user is an authenticated employer, filter by their jobs.
+        # Otherwise, return all jobs for job seekers and anonymous users.
         if user.is_authenticated and user.role == 'EMPLOYER':
             return self.queryset.filter(employer=user)
         return self.queryset
