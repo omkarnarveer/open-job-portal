@@ -7,8 +7,8 @@ class User(AbstractUser):
     ROLE_CHOICES = [(JOB_SEEKER, "Job Seeker"), (EMPLOYER, "Employer")]
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=JOB_SEEKER)
-    phone = models.CharField(max_length=20, blank=True)
-    company_name = models.CharField(max_length=255, blank=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    company_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
     def __str__(self):

@@ -7,20 +7,28 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const tokens = JSON.parse(localStorage.getItem('tokens') || 'null');
-    if (tokens) {
-      // In a real app, you would verify the token with the server
-      // For now, we'll assume a valid token means the user is logged in
-      // You should fetch the user's details from the 'me' endpoint here
-      setUser({ username: 'demo_user', role: 'JOB_SEEKER' });
-    }
+    const fetchUser = async () => {
+      const tokens = JSON.parse(localStorage.getItem('tokens') || 'null');
+      if (tokens) {
+        try {
+          client.defaults.headers.common['Authorization'] = `Bearer ${tokens.access}`;
+          const userRes = await client.get('/api/auth/me/');
+          setUser(userRes.data);
+        } catch (error) {
+          localStorage.removeItem('tokens');
+          delete client.defaults.headers.common['Authorization'];
+          setUser(null);
+        }
+      }
+    };
+    fetchUser();
   }, []);
 
   const login = async (username, password) => {
     try {
       const res = await client.post('/api/auth/login/', { username, password });
       localStorage.setItem('tokens', JSON.stringify(res.data));
-      // Fetch user details from a hypothetical 'me' endpoint after login
+      client.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`;
       const userRes = await client.get('/api/auth/me/');
       setUser(userRes.data);
     } catch (error) {
@@ -32,7 +40,11 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const res = await client.post('/api/auth/register/', userData);
-      localStorage.setItem('tokens', JSON.stringify(res.data));
+      // The register endpoint returns a 201 status but not a token.
+      // We need to immediately log in the user to get the token.
+      const loginRes = await client.post('/api/auth/login/', { username: userData.username, password: userData.password });
+      localStorage.setItem('tokens', JSON.stringify(loginRes.data));
+      client.defaults.headers.common['Authorization'] = `Bearer ${loginRes.data.access}`;
       const userRes = await client.get('/api/auth/me/');
       setUser(userRes.data);
     } catch (error) {
@@ -43,6 +55,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('tokens');
+    delete client.defaults.headers.common['Authorization'];
     setUser(null);
   };
 

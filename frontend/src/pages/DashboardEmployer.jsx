@@ -14,8 +14,12 @@ export default function DashboardEmployer() {
   });
 
   const load = async () => {
-    const res = await client.get('/jobs/');
-    setJobs(res.data.filter((j) => j.employer_name));
+    try {
+      const res = await client.get('/api/jobs/');
+      setJobs(res.data.filter((j) => j.employer_name));
+    } catch (error) {
+      console.error("Failed to fetch jobs:", error);
+    }
   };
 
   useEffect(() => {
@@ -23,26 +27,38 @@ export default function DashboardEmployer() {
   }, []);
 
   const createJob = async () => {
-    await client.post('/jobs/', form);
-    setShow(false);
-    setForm({
-      title: '',
-      description: '',
-      requirements: '',
-      location: '',
-      job_type: 'FULL_TIME',
-    });
-    load();
+    try {
+      await client.post('/api/jobs/', form);
+      setShow(false);
+      setForm({
+        title: '',
+        description: '',
+        requirements: '',
+        location: '',
+        job_type: 'FULL_TIME',
+      });
+      load();
+    } catch (error) {
+      console.error("Failed to create job:", error);
+    }
   };
 
   const markFilled = async (id) => {
-    await client.post(`/jobs/${id}/mark_filled/`);
-    load();
+    try {
+      await client.post(`/api/jobs/${id}/mark_filled/`);
+      load();
+    } catch (error) {
+      console.error("Failed to mark job as filled:", error);
+    }
   };
 
   const remove = async (id) => {
-    await client.delete(`/jobs/${id}/`);
-    load();
+    try {
+      await client.delete(`/api/jobs/${id}/`);
+      load();
+    } catch (error) {
+      console.error("Failed to delete job:", error);
+    }
   };
 
   return (

@@ -17,20 +17,22 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/jobs/:id" element={<JobDetail />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard/seeker" element={
-            <PrivateRoute role="JOB_SEEKER"><DashboardSeeker /></PrivateRoute>
-          } />
-          <Route path="/dashboard/employer" element={
-            <PrivateRoute role="EMPLOYER"><DashboardEmployer /></PrivateRoute>
-          } />
-          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        </Routes>
+        <main className="min-h-screen pt-16">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/:id" element={<JobDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard/seeker" element={
+              <PrivateRoute role="JOB_SEEKER"><DashboardSeeker /></PrivateRoute>
+            } />
+            <Route path="/dashboard/employer" element={
+              <PrivateRoute role="EMPLOYER"><DashboardEmployer /></PrivateRoute>
+            } />
+            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          </Routes>
+        </main>
       </BrowserRouter>
     </AuthProvider>
   );
