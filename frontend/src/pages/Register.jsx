@@ -20,7 +20,7 @@ export default function Register() {
   };
 
   return (
-    <div className="container mx-auto p-6 flex justify-center items-center min-h-screen">
+    <div className="container mx-auto p-6 flex justify-center items-center min-h-screen font-poppins">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 lg:p-12 transform hover:scale-105 transition-transform duration-300">
         <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">Create Your Account</h3>
         {error && (

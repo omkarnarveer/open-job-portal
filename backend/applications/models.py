@@ -4,10 +4,10 @@ from jobs.models import Job
 
 class Application(models.Model):
     STATUS_CHOICES = (
-        ("SUBMITTED", "Submitted"), 
-        ("REVIEWED", "Reviewed"), 
-        ("REJECTED", "Rejected"), 
-        ("ACCEPTED", "Accepted")
+        ("SUBMITTED", "Submitted"),
+        ("REVIEWED", "Reviewed"),
+        ("ACCEPTED", "Accepted"),
+        ("REJECTED", "Rejected"),
     )
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="applications")
     seeker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="applications")

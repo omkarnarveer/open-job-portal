@@ -14,7 +14,6 @@ export default function Jobs() {
       ...(jobType && { job_type: jobType }),
     };
     try {
-      // Corrected: The API call is triggered whenever `q` or `jobType` changes.
       const res = await client.get('/api/jobs/', { params });
       setJobs(res.data);
     } catch (error) {
@@ -24,13 +23,12 @@ export default function Jobs() {
   };
 
   useEffect(() => {
-    // Corrected: The `load` function is now called when `q` or `jobType` changes.
     load();
   }, [q, jobType]);
 
   return (
     <div className="container mx-auto p-6 font-poppins">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0 md:space-x-4 animate-fade-in-up">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0 md:space-x-4">
         <div className="relative w-full md:w-2/3">
           <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-deep-gray" />
           <input

@@ -2,14 +2,18 @@ from rest_framework import viewsets, permissions, decorators, response, status
 from .models import Job
 from .serializers import JobSerializer
 from accounts.permissions import IsEmployer, IsOwnerEmployer
-from .filters import JobFilter
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all().order_by('-created_at')
     serializer_class = JobSerializer
-    filterset_class = JobFilter
     search_fields = ["title", "description", "requirements", "location", "job_type"]
     ordering_fields = ["created_at"]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.role == 'EMPLOYER':
+            return self.queryset.filter(employer=user)
+        return self.queryset
 
     def perform_create(self, serializer):
         return serializer.save(employer=self.request.user)
@@ -17,7 +21,7 @@ class JobViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ["create"]:
             return [IsEmployer()]
-        if self.action in ["update", "partial_update", "destroy"]:
+        if self.action in ["update", "partial_update", "destroy", "mark_filled"]:
             return [IsOwnerEmployer()]
         return [permissions.IsAuthenticatedOrReadOnly()]
 

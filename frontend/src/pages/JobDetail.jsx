@@ -18,7 +18,6 @@ export default function JobDetail() {
         setJob(res.data);
       } catch (error) {
         console.error("Failed to fetch job details:", error);
-        // You might want to handle this error by showing a "Job not found" message
         setJob(null);
       }
     };
@@ -34,14 +33,13 @@ export default function JobDetail() {
       setMessage('Application submitted!');
     } catch (error) {
       console.error("Failed to submit application:", error);
-      // Handle application submission error
       setMessage('Failed to submit application.');
     }
   };
 
   if (!job) return null;
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 font-poppins">
       <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
         <h3 className="text-3xl lg:text-4xl font-extrabold text-primary-blue mb-2">{job.title}</h3>
         <p className="text-gray-600 text-lg mb-6">

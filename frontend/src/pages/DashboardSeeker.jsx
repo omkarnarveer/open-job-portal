@@ -3,7 +3,6 @@ import client from '../api/client';
 
 export default function DashboardSeeker() {
   const [apps, setApps] = useState([]);
-  
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -11,7 +10,6 @@ export default function DashboardSeeker() {
         setApps(res.data);
       } catch (error) {
         console.error("Failed to fetch applications:", error);
-        // You might want to display an error message to the user here
       }
     };
     fetchApplications();
@@ -19,8 +17,10 @@ export default function DashboardSeeker() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'PENDING':
+      case 'SUBMITTED':
         return 'bg-yellow-100 text-yellow-800';
+      case 'REVIEWED':
+        return 'bg-blue-100 text-blue-800';
       case 'ACCEPTED':
         return 'bg-green-100 text-green-800';
       case 'REJECTED':
@@ -31,7 +31,7 @@ export default function DashboardSeeker() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 font-poppins">
       <h3 className="text-3xl font-bold text-gray-800 mb-6">My Applications</h3>
       <div className="overflow-x-auto bg-white rounded-2xl shadow-xl">
         <table className="min-w-full divide-y divide-gray-200">

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import client from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { FaSave, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
@@ -20,12 +19,11 @@ export default function Profile() {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
-  // Load current profile
   useEffect(() => {
-    if (user) {
-      client
-        .get("/api/auth/me/")
-        .then((res) => {
+    const fetchProfile = async () => {
+      if (user) {
+        try {
+          const res = await client.get("/api/auth/me/");
           const { first_name, last_name, email, phone, company_name, avatar } =
             res.data;
           setForm((f) => ({
@@ -37,18 +35,20 @@ export default function Profile() {
             company_name,
           }));
           setPreview(avatar || null);
-        })
-        .catch(() => setError("Failed to load profile."));
-    }
+        } catch (error) {
+          console.error("Failed to load profile:", error);
+          setError("Failed to load profile.");
+        }
+      }
+    };
+    fetchProfile();
   }, [user]);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
 
-  // Handle avatar upload
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -57,7 +57,6 @@ export default function Profile() {
     }
   };
 
-  // Submit updated profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage(null);
@@ -75,12 +74,13 @@ export default function Profile() {
 
       setMessage("Profile updated successfully!");
     } catch (err) {
+      console.error("Failed to update profile:", err);
       setError("Failed to update profile.");
     }
   };
 
   return (
-    <div className="container mx-auto p-6 flex justify-center min-h-screen">
+    <div className="container mx-auto p-6 flex justify-center min-h-screen font-poppins">
       <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">My Profile</h2>
         
