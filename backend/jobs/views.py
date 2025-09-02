@@ -1,12 +1,13 @@
 from rest_framework import viewsets, permissions, decorators, response, status
 from .models import Job
 from .serializers import JobSerializer
-from .permissions import IsEmployer, IsOwnerEmployer
+from accounts.permissions import IsEmployer, IsOwnerEmployer
+from .filters import JobFilter
 
 class JobViewSet(viewsets.ModelViewSet):
-    queryset = Job.objects.all()
+    queryset = Job.objects.all().order_by('-created_at')
     serializer_class = JobSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    filterset_class = JobFilter
     search_fields = ["title", "description", "requirements", "location", "job_type"]
     ordering_fields = ["created_at"]
 
@@ -18,7 +19,7 @@ class JobViewSet(viewsets.ModelViewSet):
             return [IsEmployer()]
         if self.action in ["update", "partial_update", "destroy"]:
             return [IsOwnerEmployer()]
-        return super().get_permissions()
+        return [permissions.IsAuthenticatedOrReadOnly()]
 
     @decorators.action(detail=True, methods=["post"])
     def mark_filled(self, request, pk=None):

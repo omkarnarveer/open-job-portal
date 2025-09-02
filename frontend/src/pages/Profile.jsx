@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button, Alert, Image } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import client from "../api/client";
 import { useAuth } from "../auth/AuthContext";
+import { FaSave, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -23,7 +24,7 @@ export default function Profile() {
   useEffect(() => {
     if (user) {
       client
-        .get("/auth/me/")
+        .get("/api/auth/me/")
         .then((res) => {
           const { first_name, last_name, email, phone, company_name, avatar } =
             res.data;
@@ -68,7 +69,7 @@ export default function Profile() {
         if (value) data.append(key, value);
       });
 
-      await client.put("/auth/me/", data, {
+      await client.put("/api/auth/me/", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -79,82 +80,121 @@ export default function Profile() {
   };
 
   return (
-    <Container className="py-4">
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <h2 className="mb-4">My Profile</h2>
-
-          {message && <Alert variant="success">{message}</Alert>}
-          {error && <Alert variant="danger">{error}</Alert>}
-
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                name="first_name"
-                value={form.first_name}
-                onChange={handleChange}
-                required
+    <div className="container mx-auto p-6 flex justify-center min-h-screen">
+      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">My Profile</h2>
+        
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-primary-blue ring-offset-4 ring-offset-white shadow-lg">
+            {preview ? (
+              <img
+                src={preview}
+                alt="Avatar Preview"
+                className="w-full h-full object-cover"
               />
-            </Form.Group>
+            ) : (
+              <FaUserCircle className="w-full h-full text-gray-300" />
+            )}
+          </div>
+          <p className="mt-4 text-lg font-semibold text-gray-800">{user?.username || 'Guest'}</p>
+        </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                name="last_name"
-                value={form.last_name}
-                onChange={handleChange}
-              />
-            </Form.Group>
+        {message && (
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-md" role="alert">
+            <p className="font-bold">Success</p>
+            <p>{message}</p>
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
+            <p className="font-bold">Error</p>
+            <p>{error}</p>
+          </div>
+        )}
 
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                disabled
-              />
-            </Form.Group>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">First Name</label>
+            <input
+              className="shadow-inner appearance-none border-2 border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-4 focus:ring-accent-teal focus:border-transparent transition-all duration-200"
+              name="first_name"
+              value={form.first_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Phone</Form.Label>
-              <Form.Control
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-              />
-            </Form.Group>
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
+            <input
+              className="shadow-inner appearance-none border-2 border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-4 focus:ring-accent-teal focus:border-transparent transition-all duration-200"
+              name="last_name"
+              value={form.last_name}
+              onChange={handleChange}
+            />
+          </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Company Name</Form.Label>
-              <Form.Control
-                name="company_name"
-                value={form.company_name}
-                onChange={handleChange}
-              />
-            </Form.Group>
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+            <input
+              className="shadow-inner appearance-none border-2 border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight bg-gray-100 cursor-not-allowed"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              disabled
+            />
+          </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Avatar</Form.Label>
-              <Form.Control type="file" accept="image/*" onChange={handleAvatarChange} />
-              {preview && (
-                <div className="mt-3 text-center">
-                  <Image src={preview} roundedCircle width={120} height={120} />
-                </div>
-              )}
-            </Form.Group>
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Phone</label>
+            <input
+              className="shadow-inner appearance-none border-2 border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-4 focus:ring-accent-teal focus:border-transparent transition-all duration-200"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+            />
+          </div>
 
-            <Button type="submit" variant="primary" className="me-2">
-              Save Changes
-            </Button>
-            <Button variant="secondary" onClick={logout}>
-              Logout
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Company Name</label>
+            <input
+              className="shadow-inner appearance-none border-2 border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-4 focus:ring-accent-teal focus:border-transparent transition-all duration-200"
+              name="company_name"
+              value={form.company_name}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Avatar</label>
+            <input
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary-blue hover:file:bg-blue-100"
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+            />
+          </div>
+
+          <div className="flex justify-between items-center pt-6">
+            <button
+              type="submit"
+              className="flex items-center space-x-2 bg-primary-blue hover:bg-accent-teal text-white font-bold py-3 px-6 rounded-full shadow-lg focus:outline-none focus:shadow-outline transition-all duration-200"
+            >
+              <FaSave />
+              <span>Save Changes</span>
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="flex items-center space-x-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full shadow-lg focus:outline-none focus:shadow-outline transition-all duration-200"
+            >
+              <FaSignOutAlt />
+              <span>Logout</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

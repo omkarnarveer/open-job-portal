@@ -1,10 +1,7 @@
 from rest_framework import viewsets, permissions
 from .models import Application
 from .serializers import ApplicationSerializer
-
-class IsJobSeeker(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == "JOB_SEEKER"
+from .permissions import IsJobSeeker
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationSerializer

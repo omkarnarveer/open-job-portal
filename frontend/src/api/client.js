@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Set the base URL explicitly to the correct backend path
 const client = axios.create({
-  baseURL: process.env.REACT_APP_API_URL + '/api',
+  baseURL: 'http://localhost:8000',
 });
 
 client.interceptors.request.use((config) => {
