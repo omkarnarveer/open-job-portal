@@ -1,8 +1,10 @@
-# In your backend's urls.py
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import JobViewSet
+
+router = DefaultRouter()
+router.register('', JobViewSet, basename='job')
 
 urlpatterns = [
-    path('api/jobs/', views.job_list, name='job_list'),
-   
+    path('', include(router.urls)),
 ]

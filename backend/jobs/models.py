@@ -2,24 +2,23 @@ from django.db import models
 from django.conf import settings
 
 class Job(models.Model):
-    FULL_TIME = "FULL_TIME"
-    PART_TIME = "PART_TIME"
-    CONTRACT = "CONTRACT"
-    INTERNSHIP = "INTERNSHIP"
-    JOB_TYPES = [(FULL_TIME, "Full-time"), (PART_TIME, "Part-time"), (CONTRACT, "Contract"), (INTERNSHIP, "Internship")]
+    class JobType(models.TextChoices):
+        FULL_TIME = "FULL_TIME", "Full-time"
+        PART_TIME = "PART_TIME", "Part-time"
+        CONTRACT = "CONTRACT", "Contract"
+        INTERNSHIP = "INTERNSHIP", "Internship"
 
-    employer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="jobs")
+    employer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='jobs')
     title = models.CharField(max_length=255)
+    company_name = models.CharField(max_length=255, blank=True)
     description = models.TextField()
-    requirements = models.TextField(blank=True)
     location = models.CharField(max_length=255)
-    job_type = models.CharField(max_length=20, choices=JOB_TYPES, default=FULL_TIME)
-    application_deadline = models.DateField(null=True, blank=True)
+    salary_ctc = models.CharField(max_length=50, blank=True, verbose_name="Offered CTC (LPA)")
+    openings = models.PositiveIntegerField(default=1)
+    job_type = models.CharField(max_length=20, choices=JobType.choices)
     is_filled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at"]
+    requirements = models.TextField(blank=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.title} at {self.employer.username}"

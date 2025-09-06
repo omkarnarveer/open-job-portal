@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
-import { FaUserPlus, FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
-
+import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
+import client from '../api/client';
 export default function Register() {
-  const { register } = useAuth();
+  
   const nav = useNavigate();
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'JOB_SEEKER' });
   const [error, setError] = useState(null);
@@ -12,7 +11,7 @@ export default function Register() {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await register(form);
+      await client.post('/auth/register/', form);;
       nav('/login');
     } catch {
       setError('Registration failed');

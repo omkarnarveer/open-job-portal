@@ -18,11 +18,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django_filters',
+    
+    
     "rest_framework",
     'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt',
     "corsheaders",
-
+    'django_filters',
+    'drf_spectacular',
+    
     "accounts",
     "jobs",
     "applications",
@@ -79,6 +83,14 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Configure API documentation with drf-spectacular
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Job Portal API',
+    'DESCRIPTION': 'API documentation for the Open Job Portal project',
+    'VERSION': '1.0.0',
 }
 
 SIMPLE_JWT = {

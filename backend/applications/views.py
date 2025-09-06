@@ -1,40 +1,28 @@
-from rest_framework import viewsets, permissions
-from rest_framework.decorators import action
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from rest_framework import status
 from .models import Application
 from .serializers import ApplicationSerializer
-from accounts.permissions import IsEmployer
 from .permissions import IsJobSeeker
 
 class ApplicationViewSet(viewsets.ModelViewSet):
+    queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            # Use the new, dedicated permission class
+            self.permission_classes = [IsJobSeeker]
+        else:
+            self.permission_classes = [permissions.IsAuthenticated]
+        return super().get_permissions()
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
-            if user.role == "EMPLOYER":
-                return Application.objects.filter(job__employer=user).select_related("job", "seeker").order_by('-created_at')
-            return Application.objects.filter(seeker=user).select_related("job", "seeker").order_by('-created_at')
+        if user.role == 'EMPLOYER':
+            return Application.objects.filter(job__employer=user)
+        elif user.role == 'JOB_SEEKER':
+            return Application.objects.filter(seeker=user)
         return Application.objects.none()
-
-    def get_permissions(self):
-        if self.action == "create":
-            return [IsJobSeeker()]
-        return [permissions.IsAuthenticated()]
 
     def perform_create(self, serializer):
         serializer.save(seeker=self.request.user)
-
-    @action(detail=True, methods=['post'])
-    def update_status(self, request, pk=None):
-        application = self.get_object()
-        user = request.user
-        new_status = request.data.get('status')
-        
-        if user.is_authenticated and user.role == 'EMPLOYER' and application.job.employer == user:
-            application.status = new_status
-            application.save()
-            return Response({'status': f'Application status updated to {new_status}'})
-        
-        return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)

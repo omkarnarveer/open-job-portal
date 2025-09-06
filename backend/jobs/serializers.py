@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Job
+from accounts.serializers import UserProfileSerializer
 
 class JobSerializer(serializers.ModelSerializer):
-    employer_name = serializers.CharField(source="employer.username", read_only=True)
+    # Show employer's username instead of just their ID
+    employer_username = serializers.CharField(source='employer.username', read_only=True)
 
     class Meta:
         model = Job
-        fields = ["id", "employer", "employer_name", "title", "description", "requirements", "location", "job_type", "application_deadline", "is_filled", "created_at"]
-        read_only_fields = ["employer", "created_at"]
+        fields = '__all__'
+        read_only_fields = ('employer',)

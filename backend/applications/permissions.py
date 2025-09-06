@@ -1,5 +1,8 @@
-from rest_framework.permissions import BasePermission
+from rest_framework import permissions
 
-class IsJobSeeker(BasePermission):
+class IsJobSeeker(permissions.BasePermission):
+    """
+    Custom permission to only allow users with the JOB_SEEKER role.
+    """
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == "JOB_SEEKER"
+        return request.user.is_authenticated and request.user.role == 'JOB_SEEKER'

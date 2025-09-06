@@ -23,7 +23,8 @@ export default function Profile() {
     const fetchProfile = async () => {
       if (user) {
         try {
-          const res = await client.get("/api/auth/me/");
+          // REMOVED /api prefix from the path
+          const res = await client.get("/auth/me/");
           const { first_name, last_name, email, phone, company_name, avatar } =
             res.data;
           setForm((f) => ({
@@ -68,7 +69,8 @@ export default function Profile() {
         if (value) data.append(key, value);
       });
 
-      await client.put("/api/auth/me/", data, {
+      // REMOVED /api prefix from the path
+      await client.put("/auth/me/", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

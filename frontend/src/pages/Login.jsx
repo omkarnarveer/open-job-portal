@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { FaUser, FaLock } from 'react-icons/fa';
+// 'client' is not needed here because AuthContext handles the API call.
 
 export default function Login() {
   const { login } = useAuth();
@@ -21,7 +22,7 @@ export default function Login() {
 
   return (
     <div className="container mx-auto p-6 flex justify-center items-center min-h-screen font-poppins">
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 lg:p-12 transform hover:scale-105 transition-transform duration-300">
+      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 lg-p-12 transform hover:scale-105 transition-transform duration-300">
         <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">Welcome Back</h3>
         {error && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
@@ -30,6 +31,7 @@ export default function Login() {
           </div>
         )}
         <form onSubmit={submit}>
+          {/* ... Your form JSX remains the same ... */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="username">
               Username

@@ -14,7 +14,8 @@ export default function Jobs() {
       ...(jobType && { job_type: jobType }),
     };
     try {
-      const res = await client.get('/api/jobs/', { params });
+      // CORRECTED PATH: Removed the /api prefix
+      const res = await client.get('/jobs/', { params });
       setJobs(res.data);
     } catch (error) {
       console.error("Failed to fetch jobs:", error);
@@ -56,9 +57,11 @@ export default function Jobs() {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {jobs.map((j) => (
-          <JobCard key={j.id} job={j} />
-        ))}
+        {jobs.length > 0 ? (
+          jobs.map((j) => <JobCard key={j.id} job={j} />)
+        ) : (
+          <p className="col-span-3 text-center text-gray-500">No jobs found.</p>
+        )}
       </div>
     </div>
   );

@@ -1,23 +1,23 @@
 from django.db import models
 from django.conf import settings
-from jobs.models import Job
 
 class Application(models.Model):
-    STATUS_CHOICES = (
-        ("SUBMITTED", "Submitted"),
-        ("REVIEWED", "Reviewed"),
-        ("ACCEPTED", "Accepted"),
-        ("REJECTED", "Rejected"),
-    )
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="applications")
-    seeker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="applications")
-    cover_letter = models.TextField(blank=True)
-    resume = models.FileField(upload_to="resumes/", blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="SUBMITTED")
-    created_at = models.DateTimeField(auto_now_add=True)
+    class Status(models.TextChoices):
+        SUBMITTED = "SUBMITTED", "Submitted"
+        REVIEWED = "REVIEWED", "Reviewed"
+        ACCEPTED = "ACCEPTED", "Accepted"
+        REJECTED = "REJECTED", "Rejected"
+
+    job = models.ForeignKey('jobs.Job', on_delete=models.CASCADE, related_name='applications')
+    seeker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.SUBMITTED)
+    cover_letter = models.TextField()
+    resume = models.FileField(upload_to='resumes/')
+    applied_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("job", "seeker")
+        # A seeker can only apply to a specific job once
+        unique_together = ('job', 'seeker')
 
     def __str__(self):
-        return f"{self.seeker} -> {self.job}"
+        return f"Application for {self.job.title} by {self.seeker.username}"

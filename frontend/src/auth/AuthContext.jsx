@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import client from '../api/client';
+import { jwtDecode } from 'jwt-decode'; // You will need to install this: npm install jwt-decode
 
 const AuthContext = createContext(null);
 
@@ -11,10 +12,18 @@ export const AuthProvider = ({ children }) => {
       const tokens = JSON.parse(localStorage.getItem('tokens') || 'null');
       if (tokens) {
         try {
+          // Check if token is expired
+          const decodedToken = jwtDecode(tokens.access);
+          if (decodedToken.exp * 1000 < Date.now()) {
+            throw new Error("Token expired");
+          }
+          
           client.defaults.headers.common['Authorization'] = `Bearer ${tokens.access}`;
-          const userRes = await client.get('/api/auth/me/');
+          // CORRECTED PATH
+          const userRes = await client.get('/auth/me/');
           setUser(userRes.data);
         } catch (error) {
+          console.error("Auth useEffect error:", error);
           localStorage.removeItem('tokens');
           delete client.defaults.headers.common['Authorization'];
           setUser(null);
@@ -26,10 +35,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const res = await client.post('/api/auth/login/', { username, password });
+      // This call was already correct
+      const res = await client.post('/token/', { username, password });
       localStorage.setItem('tokens', JSON.stringify(res.data));
       client.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`;
-      const userRes = await client.get('/api/auth/me/');
+      // CORRECTED PATH
+      const userRes = await client.get('/auth/me/');
       setUser(userRes.data);
     } catch (error) {
       console.error('Login failed:', error);
@@ -39,14 +50,10 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const res = await client.post('/api/auth/register/', userData);
-      // The register endpoint returns a 201 status but not a token.
-      // We need to immediately log in the user to get the token.
-      const loginRes = await client.post('/api/auth/login/', { username: userData.username, password: userData.password });
-      localStorage.setItem('tokens', JSON.stringify(loginRes.data));
-      client.defaults.headers.common['Authorization'] = `Bearer ${loginRes.data.access}`;
-      const userRes = await client.get('/api/auth/me/');
-      setUser(userRes.data);
+      // CORRECTED PATH
+      await client.post('/auth/register/', userData);
+      // REFACTORED LOGIC: Call the login function to avoid repeating code
+      await login(userData.username, userData.password);
     } catch (error) {
       console.error('Registration failed:', error);
       throw error;

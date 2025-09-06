@@ -1,7 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+// Import new icons
+import { FaMapMarkerAlt, FaBriefcase, FaMoneyBillWave, FaUsers } from 'react-icons/fa';
 
-export default function JobCard({ job, onApply }) {
+const formatPostedDate = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now - date);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  if (diffDays <= 1) return 'Posted today';
+  if (diffDays <= 7) return `Posted ${diffDays} days ago`;
+  return `Posted on ${date.toLocaleDateString()}`;
+}
+
+export default function JobCard({ job }) {
   const {
     id,
     title,
@@ -9,58 +22,54 @@ export default function JobCard({ job, onApply }) {
     location,
     job_type,
     is_filled,
-    employer_name,
-    created_at
+    employer_logo,
+    created_at,
+    // Destructure new fields from the job prop
+    company_name,
+    salary_ctc,
+    openings,
   } = job;
 
   const shortDesc =
-    description.length > 120 ? description.slice(0, 120) + '…' : description;
-
-  const getJobTypeColor = (type) => {
-    const typeMap = {
-      FULL_TIME: 'bg-green-100 text-green-800',
-      PART_TIME: 'bg-blue-100 text-blue-800',
-      CONTRACT: 'bg-yellow-100 text-yellow-800',
-      INTERNSHIP: 'bg-purple-100 text-purple-800'
-    };
-    return typeMap[type] || 'bg-gray-100 text-gray-800';
-  };
+    description.length > 100 ? description.slice(0, 100) + '…' : description;
 
   return (
-    <div className="h-full p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-2">
+    <div className="h-full p-6 bg-white rounded-2xl border border-gray-200 hover:shadow-xl hover:border-primary-blue transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-1">
       <div>
-        <h3 className="text-2xl font-bold text-gray-800 leading-tight">{title}</h3>
-        <p className="mt-2 text-sm text-deep-gray">
-          <span className="font-semibold">{location}</span>
-          <span className={`inline-flex items-center ml-2 px-3 py-1 rounded-full text-xs font-semibold ${getJobTypeColor(job_type)}`}>
-            {job_type}
-          </span>
-        </p>
-        <p className="mt-4 text-gray-700 leading-relaxed">{shortDesc}</p>
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            {/* Display Company Name */}
+            <p className="text-sm font-semibold text-primary-blue">{company_name}</p>
+            <h3 className="text-xl font-bold text-gray-800 leading-tight mt-1">{title}</h3>
+          </div>
+          {employer_logo && (
+            <img src={employer_logo} alt={`${company_name} logo`} className="w-14 h-14 rounded-lg object-contain bg-gray-50 p-1 ml-4" />
+          )}
+        </div>
+        
+        {/* Display all new fields */}
+        <div className="flex flex-col text-sm text-gray-600 space-y-2 mb-4">
+          <span className="flex items-center"><FaMapMarkerAlt className="mr-2 text-gray-400" /> {location}</span>
+          <span className="flex items-center"><FaBriefcase className="mr-2 text-gray-400" /> {job_type.replace('_', ' ')}</span>
+          {salary_ctc && (
+            <span className="flex items-center"><FaMoneyBillWave className="mr-2 text-gray-400" /> ₹{salary_ctc} LPA</span>
+          )}
+          <span className="flex items-center"><FaUsers className="mr-2 text-gray-400" /> {openings} Opening(s)</span>
+        </div>
+        
+        <p className="text-gray-700 leading-relaxed text-sm">{shortDesc}</p>
       </div>
 
       <div className="mt-6 flex justify-between items-center">
         <p className="text-xs text-gray-500">
-          Posted by <span className="font-medium text-gray-700">{employer_name}</span> on {new Date(created_at).toLocaleDateString()}
+          {formatPostedDate(created_at)}
         </p>
-
-        {is_filled ? (
-          <span className="inline-flex items-center px-4 py-2 text-xs font-semibold bg-gray-200 text-gray-700 rounded-full">
-            Filled
-          </span>
-        ) : onApply ? (
-          <button
-            onClick={() => onApply(job)}
-            className="px-6 py-3 text-sm font-semibold bg-primary-blue text-white rounded-full shadow-lg hover:bg-accent-teal transition-all duration-200 transform hover:scale-105 active:scale-95"
-          >
-            Apply
-          </button>
-        ) : (
+        {!is_filled && (
           <Link
             to={`/jobs/${id}`}
-            className="px-6 py-3 text-sm font-semibold bg-primary-blue text-white rounded-full shadow-lg hover:bg-accent-teal transition-all duration-200 transform hover:scale-105 active:scale-95"
+            className="px-5 py-2 text-sm font-semibold bg-primary-blue text-white rounded-full shadow-lg hover:bg-accent-teal transition-colors duration-200"
           >
-            View
+            View Details
           </Link>
         )}
       </div>
